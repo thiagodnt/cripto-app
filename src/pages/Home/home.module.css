@@ -1,0 +1,22 @@
+.container {
+	margin: 0 14px;
+}
+
+.form {
+	width: 100%;
+	display: flex;
+	gap: 25px;
+}
+
+.form input {
+	height: 50px;
+	width: 100%;
+	outline: none;
+	border: none;
+	padding: 0 14px;
+	border-radius: 5px;
+}
+
+.form button {
+	background: transparent;
+}
