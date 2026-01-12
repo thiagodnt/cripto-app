@@ -24,6 +24,7 @@ destinada à listagem e visualização de dados de criptomoedas em tempo real.
 -  Implementação de renderização condicional
 -  Tipagem de dados com TypeScript
 -  Organização e componentização da aplicação
+-  Criação de roteamento para navegação entre páginas da aplicação
 -  Consumo de API para obtenção de dados atualizados de criptomoedas
 
 As funcionalidades foram implementadas com base nos exemplos apresentados
