@@ -61,7 +61,7 @@ table td {
 
 .tdLabel {
 	font-weight: bold;
-	font-size: 18px;
+	font-size: 14px;
 	color: #fff;
 }
 
@@ -89,8 +89,28 @@ table td {
 	background-color: hsl(209, 100%, 49%);
 }
 
+.name {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.coinImg {
+	width: 20px;
+	height: 20px;
+	transition: all 1s;
+}
+
+.coinImg:hover {
+	transform: scale(1.5);
+}
+
 /* Media queries */
 @media screen and (max-width: 600px) {
+	.name {
+		justify-content: end;
+	}
+
 	table {
 		border: 0;
 	}
