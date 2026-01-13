@@ -1,14 +1,34 @@
+import { useState, type FormEvent } from 'react';
 import styles from './home.module.css';
 import { BsSearch } from 'react-icons/bs';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 export function Home() {
+	const [search, setSearch] = useState('');
+	const navigate = useNavigate();
+
+	function handleSubmit(e: FormEvent) {
+		e.preventDefault();
+
+		if (search === '') {
+			return;
+		}
+
+		navigate(`/detail/${search}`);
+	}
+
+	function handleLoadMore() {
+		console.log('ok');
+	}
+
 	return (
 		<main className={styles.container}>
-			<form className={styles.form}>
+			<form className={styles.form} onSubmit={handleSubmit}>
 				<input
 					type="text"
 					placeholder="Digite aqui o nome da moeda (Ex: BitCoin)"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
 				/>
 				<button type="submit">
 					<BsSearch size={30} color="#FFF" />
@@ -49,6 +69,8 @@ export function Home() {
 					</tr>
 				</tbody>
 			</table>
+
+			<button className={styles.btnLoadMore}>Carregar Mais...</button>
 		</main>
 	);
 }
