@@ -1,11 +1,77 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import styles from './home.module.css';
 import { BsSearch } from 'react-icons/bs';
 import { Link, useNavigate } from 'react-router';
 
+interface CoinProps {
+	changePercent24Hr: string;
+	explorer: string;
+	id: string;
+	marketCapUsd: string;
+	maxSupply: string;
+	name: string;
+	priceUsd: string;
+	rank: string;
+	supply: string;
+	symbol: string;
+	volumeUsd24Hr: string;
+	vwap24Hr: string;
+}
+
+interface DataProps {
+	data: CoinProps[];
+}
+
 export function Home() {
 	const [search, setSearch] = useState('');
+	const [coins, setCoins] = useState<CoinProps[]>([]);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		getData();
+	}, []);
+
+	async function getData() {
+		try {
+			const API_URL = import.meta.env.VITE_COINCAP_API_URL;
+			const API_KEY = import.meta.env.VITE_COINCAP_API_KEY;
+
+			const response = await fetch(`${API_URL}/assets?limit=10&offset=0`, {
+				headers: {
+					Authorization: `Bearer ${API_KEY}`,
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Erro ao obter os dados da API');
+			}
+
+			const data: DataProps = await response.json();
+			const coinsData = data.data;
+
+			const price = Intl.NumberFormat('en-US', {
+				style: 'currency',
+				currency: 'USD',
+			});
+
+			const formattedResults = coinsData.map((item) => {
+				const formatted = {
+					...item,
+					formattedPrice: price.format(Number(item.priceUsd)),
+				};
+
+				return formatted;
+			});
+
+			console.log(formattedResults);
+		} catch (error) {
+			if (error instanceof Error) {
+				console.log(error.message);
+			} else {
+				console.log('Erro desconhecido');
+			}
+		}
+	}
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
