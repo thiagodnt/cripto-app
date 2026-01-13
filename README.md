@@ -30,6 +30,13 @@ destinada à listagem e visualização de dados de criptomoedas em tempo real.
 As funcionalidades foram implementadas com base nos exemplos apresentados
 durante o curso, com adaptações realizadas para fins de prática e aprendizado.
 
+## API
+
+Este projeto consome a CoinCap API, uma API pública e read-only.
+A autenticação via token é utilizada apenas para controle de rate limit.
+Por se tratar de um projeto frontend educacional, o token seria exposto
+no bundle final, o que é esperado nesse contexto.
+
 ## Tecnologias Utilizadas
 
 -  React
