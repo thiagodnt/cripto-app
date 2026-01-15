@@ -32,66 +32,66 @@ export function Home() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		getData();
-	}, [offset]);
+		async function getData() {
+			try {
+				const API_URL = import.meta.env.VITE_COINCAP_API_URL;
+				const API_KEY = import.meta.env.VITE_COINCAP_API_KEY;
 
-	async function getData() {
-		try {
-			const API_URL = import.meta.env.VITE_COINCAP_API_URL;
-			const API_KEY = import.meta.env.VITE_COINCAP_API_KEY;
+				const response = await fetch(
+					`${API_URL}/assets?limit=10&offset=${offset}`,
+					{
+						headers: {
+							Authorization: `Bearer ${API_KEY}`,
+						},
+					}
+				);
 
-			const response = await fetch(
-				`${API_URL}/assets?limit=10&offset=${offset}`,
-				{
-					headers: {
-						Authorization: `Bearer ${API_KEY}`,
-					},
+				if (!response.ok) {
+					throw new Error('Erro ao obter os dados da API');
 				}
-			);
 
-			if (!response.ok) {
-				throw new Error('Erro ao obter os dados da API');
-			}
+				const data: DataProps = await response.json();
+				const coinsData = data.data;
 
-			const data: DataProps = await response.json();
-			const coinsData = data.data;
+				const price = Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'USD',
+				});
 
-			const price = Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD',
-			});
+				const compactedPrice = Intl.NumberFormat('en-US', {
+					style: 'currency',
+					currency: 'USD',
+					notation: 'compact',
+				});
 
-			const compactedPrice = Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD',
-				notation: 'compact',
-			});
+				const formattedResults = coinsData.map((item) => {
+					const formatted = {
+						...item,
+						formattedPrice: price.format(Number(item.priceUsd)),
+						formattedMarketCap: compactedPrice.format(
+							Number(item.marketCapUsd)
+						),
+						formattedVolume: compactedPrice.format(
+							Number(item.volumeUsd24Hr)
+						),
+					};
 
-			const formattedResults = coinsData.map((item) => {
-				const formatted = {
-					...item,
-					formattedPrice: price.format(Number(item.priceUsd)),
-					formattedMarketCap: compactedPrice.format(
-						Number(item.marketCapUsd)
-					),
-					formattedVolume: compactedPrice.format(
-						Number(item.volumeUsd24Hr)
-					),
-				};
+					return formatted;
+				});
 
-				return formatted;
-			});
-
-			const coinsList = [...coins, ...formattedResults];
-			setCoins(coinsList);
-		} catch (error) {
-			if (error instanceof Error) {
-				console.log(error.message);
-			} else {
-				console.log('Erro desconhecido');
+				const coinsList = [...coins, ...formattedResults];
+				setCoins(coinsList);
+			} catch (error) {
+				if (error instanceof Error) {
+					console.log(error.message);
+				} else {
+					console.log('Erro desconhecido');
+				}
 			}
 		}
-	}
+
+		getData();
+	}, [offset]);
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
