@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { CoinProps } from '../../types/coin';
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+import styles from './detail.module.css';
 
 interface ResponseData {
 	data: CoinProps;
@@ -14,6 +15,7 @@ type DataProps = ResponseData | ErrorData;
 
 export function Detail() {
 	const [coin, setCoin] = useState<CoinProps>();
+	const [loading, setLoading] = useState<boolean>(true);
 	const { currency } = useParams();
 	const navigate = useNavigate();
 
@@ -69,15 +71,61 @@ export function Detail() {
 					console.log(error.message);
 					navigate('/');
 				}
+			} finally {
+				setLoading(false);
 			}
 		}
 
 		getCoinDetails();
 	}, [currency]);
 
+	if (loading || !coin) {
+		return (
+			<div className={styles.container}>
+				<h1 className={styles.center}>Carregando detalhes...</h1>
+			</div>
+		);
+	}
+
 	return (
-		<div>
-			<h1>Detalhes da moeda {currency}</h1>
+		<div className={styles.container}>
+			<h1 className={styles.center}>{coin?.name}</h1>
+			<h1 className={styles.center}>{coin?.symbol}</h1>
+
+			<section className={styles.content}>
+				<h1>
+					{coin?.name} | {coin?.symbol}
+				</h1>
+				<img
+					src={`https://assets.coincap.io/assets/icons/${coin?.symbol.toLocaleLowerCase()}@2x.png`}
+					alt="Logo da moeda"
+					className={styles.logo}
+				/>
+				<p>
+					<strong>Preço: </strong>
+					{coin?.formattedPrice}
+				</p>
+				<p>
+					<strong>Valor de Mercado: </strong>
+					{coin?.formattedMarketCap}
+				</p>
+				<p>
+					<strong>Volume: </strong>
+					{coin?.formattedVolume}
+				</p>
+				<p>
+					<strong>Mudança 24h: </strong>
+					<span
+						className={
+							Number(coin?.changePercent24Hr) > 0
+								? styles.profit
+								: styles.loss
+						}
+					>
+						{`${Number(coin?.changePercent24Hr).toFixed(2)}%`}
+					</span>
+				</p>
+			</section>
 		</div>
 	);
 }

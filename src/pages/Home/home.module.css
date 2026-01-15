@@ -65,12 +65,12 @@ table td {
 	color: #fff;
 }
 
-.tdProfit {
+.profit {
 	color: #12f98a;
 	font-weight: bold;
 }
 
-.tdLoss {
+.loss {
 	color: #f91257;
 	font-weight: bold;
 }

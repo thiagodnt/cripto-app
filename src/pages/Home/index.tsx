@@ -113,7 +113,7 @@ export function Home() {
 				<thead>
 					<tr>
 						<th scope="col">Moeda</th>
-						<th scope="col">Valor Mercado</th>
+						<th scope="col">Valor de Mercado</th>
 						<th scope="col">Preço</th>
 						<th scope="col">Volume</th>
 						<th scope="col">Mudança 24h</th>
@@ -128,7 +128,7 @@ export function Home() {
 										<img
 											className={styles.coinImg}
 											src={`https://assets.coincap.io/assets/icons/${coin.symbol.toLocaleLowerCase()}@2x.png`}
-											alt="Logo Moeda"
+											alt="Logo da moeda"
 										/>
 										<Link to={`/detail/${coin.id}`}>
 											<span>{coin.name}</span> | {coin.symbol}
@@ -150,8 +150,8 @@ export function Home() {
 								<td
 									className={
 										Number(coin.changePercent24Hr) > 0
-											? styles.tdProfit
-											: styles.tdLoss
+											? styles.profit
+											: styles.loss
 									}
 									data-label="Mudança 24h"
 								>
