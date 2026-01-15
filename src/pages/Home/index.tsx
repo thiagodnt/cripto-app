@@ -28,22 +28,26 @@ interface DataProps {
 export function Home() {
 	const [search, setSearch] = useState('');
 	const [coins, setCoins] = useState<CoinProps[]>([]);
+	const [offset, setOffset] = useState(0);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		getData();
-	}, []);
+	}, [offset]);
 
 	async function getData() {
 		try {
 			const API_URL = import.meta.env.VITE_COINCAP_API_URL;
 			const API_KEY = import.meta.env.VITE_COINCAP_API_KEY;
 
-			const response = await fetch(`${API_URL}/assets?limit=10&offset=0`, {
-				headers: {
-					Authorization: `Bearer ${API_KEY}`,
-				},
-			});
+			const response = await fetch(
+				`${API_URL}/assets?limit=10&offset=${offset}`,
+				{
+					headers: {
+						Authorization: `Bearer ${API_KEY}`,
+					},
+				}
+			);
 
 			if (!response.ok) {
 				throw new Error('Erro ao obter os dados da API');
@@ -78,7 +82,8 @@ export function Home() {
 				return formatted;
 			});
 
-			setCoins(formattedResults);
+			const coinsList = [...coins, ...formattedResults];
+			setCoins(coinsList);
 		} catch (error) {
 			if (error instanceof Error) {
 				console.log(error.message);
@@ -99,7 +104,12 @@ export function Home() {
 	}
 
 	function handleLoadMore() {
-		console.log('ok');
+		if (offset === 0) {
+			setOffset(10);
+			return;
+		}
+
+		setOffset(offset + 10);
 	}
 
 	return (
@@ -171,7 +181,9 @@ export function Home() {
 				</tbody>
 			</table>
 
-			<button className={styles.btnLoadMore}>Carregar Mais...</button>
+			<button className={styles.btnLoadMore} onClick={handleLoadMore}>
+				Carregar Mais...
+			</button>
 		</main>
 	);
 }
